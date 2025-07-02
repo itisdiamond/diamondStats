@@ -1,5 +1,6 @@
 # You can install:
 install.packages("remotes")
+
 remotes::install_github("itisdiamond/diamondStats")
 
 If necessary, you will be prompted to install additional required packages.
