@@ -1024,8 +1024,3 @@ dbinom_plot <- function(x, size, prob, show_table = FALSE) {
        col = "red", font = 2)
 }
 
-
-
-
-
-
