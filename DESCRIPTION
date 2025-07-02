@@ -6,4 +6,7 @@ License: None
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-
+Imports: 
+    DescTools,
+    energy,
+    ppcor
