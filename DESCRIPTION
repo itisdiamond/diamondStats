@@ -1,0 +1,9 @@
+Package: diamondStats
+Title: Streamlined Descriptive Statistics and Data Exploration
+Version: 0.0.0.9000
+Description: diamondStats is an R package designed to streamline descriptive statistical analysis and data exploration. It provides user-friendly functions for summarizing numeric and categorical variables, generating discursive tables, analyzing correlations (including partial correlations), and producing quick, clear visualizations. The package is especially useful for researchers, students, and anyone who needs ready-to-use statistical summaries for reports or oral presentations. Transparent and reproducible workflows make it ideal for both teaching and applied data analysis.
+License: None
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+
