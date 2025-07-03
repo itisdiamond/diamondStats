@@ -10,8 +10,15 @@ It is recommended to accept and confirm the installation of dependencies to ensu
 
 This guide explains all possible input forms for each main function in the package
 
-**sdmean_diamond**
-**Compute mean and standard deviation.**
+# diamondStats: Usage Guide
+
+This guide explains all possible input forms for each main function in the package, clarifying accepted argument types, typical usage, and options. The goal is to make the syntax clear both to expert R users and to those less familiar with function calling conventions.
+
+---
+
+## sdmean\_diamond
+
+**Compute mean and standard deviation of a numeric vector.**
 
 ```r
 # Typical usage: input is a numeric vector
@@ -26,7 +33,8 @@ sdmean_diamond(data$column)
 
 ---
 
-**barplot_error**
+## barplot\_error
+
 **Draw barplot of group means with error bars.**
 
 ```r
@@ -46,7 +54,8 @@ barplot_error(y ~ group, data = mydata, error.bars = "conf.int", conf.level = 0.
 
 ---
 
-**mean_diamond**
+## mean\_diamond
+
 **Compare mean and standard deviation using classical, trimmed, and winsorized methods.**
 
 ```r
@@ -55,14 +64,16 @@ mean_diamond(x, trim = 0.1)                 # Trimming
 mean_diamond(x, probs = c(0.01, 0.99))      # Winsorizing
 mean_diamond(x, verbose = TRUE)             # Prints and returns data frame
 # x: numeric vector
-```r
+```
 
 **Returns:** Data frame with method, n, mean, sd, etc.
 
+---
 
-**SkewKurt_diamond**
+## SkewKurt\_diamond
 
 **Compute skewness and kurtosis, with interpretation.**
+
 ```r
 # Basic usage with a numeric vector
 SkewKurt_diamond(x)
@@ -71,25 +82,14 @@ SkewKurt_diamond(x, na.rm = TRUE)
 
 # Formula interface (per-group calculation)
 SkewKurt_diamond(y ~ group, data = mydata)
-```r
+```
 
-x: numeric vector
-y: numeric variable (for grouping)
-group: grouping variable (factor/character/numeric)
-data: data frame (optional)
-
-**Returns**:
-
-If given a numeric vector:
-Named list with skewness, kurtosis, and their classification.
-
-If used with a formula (y ~ group):
-Data frame with skewness and kurtosis (and interpretation) for each group.
-
+**Returns**: If given a numeric vector: Named list with skewness, kurtosis, and their classification.
+If used with a formula (y ~ group): Data frame with skewness and kurtosis (and interpretation) for each group.
 
 ---
 
-**correlation_diamond**
+## correlation\_diamond
 
 **Flexible correlation with CI, strength, subgrouping.**
 
@@ -115,7 +115,8 @@ correlation_diamond(y ~ x, data = mydata, subset = logical_vector)
 
 ---
 
-**cor_influence_diamond**
+## cor\_influence\_diamond
+
 **Assess leave-one-out influence on correlation.**
 
 ```r
@@ -133,7 +134,7 @@ cor_influence_diamond(x, y, subset = logical_vector)
 
 ---
 
-**pcorrelation_diamond**
+## pcorrelation\_diamond
 
 **Partial correlation, flexible control variables and grouping.**
 
@@ -153,7 +154,8 @@ pcorrelation_diamond(x, y, z, data = mydata)
 
 ---
 
-**glass.delta_1s**
+## glass.delta\_1s
+
 **Glass's delta (single sample vs. population) with bootstrap CI.**
 
 ```r
@@ -169,7 +171,7 @@ print(glass.delta_1s(x, mu = value, sd = value))
 
 ---
 
-**mvnorm**
+## mvnorm
 
 **Energy test of multivariate normality.**
 
@@ -187,7 +189,7 @@ mvnorm(x, y, subset = logical_vector)
 
 ---
 
-**lm_summary**
+## lm\_summary
 
 **Regression diagnostics: formula or lm object.**
 
@@ -203,3 +205,29 @@ lm_summary(lm_object, order = "asc")
 * Options: show best/worst residuals, plotting, order
 
 **Returns:** Data frame with regression stats per observation.
+
+---
+
+## Dependencies
+
+Some functions require the following packages:
+
+* `DescTools`
+* `ppcor`
+* `energy`
+
+Install if necessary:
+
+```r
+install.packages(c("DescTools", "ppcor", "energy"))
+```
+
+---
+
+## General Notes
+
+* Functions accept both plain vectors and data frame columns as input.
+* `subset` arguments accept logical, factor, character, or numeric vectors (see each function).
+* For full details, use R help: `?function_name`.
+
+---
