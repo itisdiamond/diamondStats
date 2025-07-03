@@ -10,10 +10,6 @@ It is recommended to accept and confirm the installation of dependencies to ensu
 
 This guide explains all possible input forms for each main function in the package
 
-# diamondStats: Usage Guide
-
-This guide explains all possible input forms for each main function in the package, clarifying accepted argument types, typical usage, and options. The goal is to make the syntax clear both to expert R users and to those less familiar with function calling conventions.
-
 ---
 
 ## sdmean\_diamond
