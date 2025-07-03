@@ -55,7 +55,7 @@ mean_diamond(x, trim = 0.1)                 # Trimming
 mean_diamond(x, probs = c(0.01, 0.99))      # Winsorizing
 mean_diamond(x, verbose = TRUE)             # Prints and returns data frame
 # x: numeric vector
-```
+```r
 
 **Returns:** Data frame with method, n, mean, sd, etc.
 
@@ -63,14 +63,29 @@ mean_diamond(x, verbose = TRUE)             # Prints and returns data frame
 **SkewKurt_diamond**
 
 **Compute skewness and kurtosis, with interpretation.**
-
 ```r
+# Basic usage with a numeric vector
 SkewKurt_diamond(x)
 SkewKurt_diamond(x, na.rm = TRUE)
 # x: numeric vector (at least 8 valid values recommended)
-```
 
-**Returns:** List: skewness, kurtosis, classification.
+# Formula interface (per-group calculation)
+SkewKurt_diamond(y ~ group, data = mydata)
+```r
+
+x: numeric vector
+y: numeric variable (for grouping)
+group: grouping variable (factor/character/numeric)
+data: data frame (optional)
+
+**Returns**:
+
+If given a numeric vector:
+Named list with skewness, kurtosis, and their classification.
+
+If used with a formula (y ~ group):
+Data frame with skewness and kurtosis (and interpretation) for each group.
+
 
 ---
 
