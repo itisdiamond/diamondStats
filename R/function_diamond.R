@@ -277,49 +277,105 @@ mean_diamond <- function(x, trim = 0.2, probs = c(0.05, 0.95), verbose = FALSE) 
   }
 }
 
-
-#' Skewness and Kurtosis with Classification
+#' Skewness and Kurtosis (with Classification)
 #'
-#' Computes skewness and kurtosis (bias-corrected) using the \pkg{DescTools} package and classifies the results.
+#' Computes skewness and kurtosis (with interpretation) for a numeric vector or, using a formula, for each group of a factor.
 #'
-#' @param x Numeric vector.
-#' @param na.rm Logical. If \code{TRUE}, missing values are removed before computation.
+#' @param x A numeric vector, or a formula of the form \code{numeric_var ~ group_var}.
+#' @param data Optional data frame in which to evaluate the variables in \code{x}.
+#' @param na.rm Logical; if \code{TRUE} (default), missing values are removed before computation.
 #'
-#' @return A list with:
-#' \describe{
-#'   \item{skewness}{Skewness value}
-#'   \item{skew_class}{Interpretation of skewness}
-#'   \item{kurtosis}{Kurtosis value}
-#'   \item{kurt_class}{Interpretation of kurtosis}
-#' }
+#' @return If a numeric vector is provided, returns a named list with skewness, skewness classification, kurtosis, and kurtosis classification.
+#'         If a formula is provided, returns a data.frame with results per group.
 #'
-#' @importFrom DescTools Skew Kurt
+#' @details Skewness and kurtosis are computed using \code{DescTools::Skew} and \code{DescTools::Kurt}.
+#'          Interpretation follows these thresholds:
+#'          \itemize{
+#'            \item Severely negative: < -2
+#'            \item Moderately negative: < -1
+#'            \item Slightly negative: < -0.5
+#'            \item Approximately normal: -0.5 to 0.5
+#'            \item Slightly positive: <= 1
+#'            \item Moderately positive: <= 2
+#'            \item Severely positive: > 2
+#'          }
+#'
+#' @examples
+#' SkewKurt_diamond(mtcars$mpg)
+#' SkewKurt_diamond(mpg ~ cyl, data = mtcars)
+#'
 #' @export
-SkewKurt_diamond <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) stop("Input must be a numeric vector.")
-  if (na.rm) x <- x[!is.na(x)]
-  if (length(x) < 8) stop("Sample size too small to evaluate distribution shape.")
-
-  skew <- DescTools::Skew(x)
-  kurt <- DescTools::Kurt(x)
-
-  classify <- function(value) {
-    if (value < -2) "Severely negative"
-    else if (value < -1) "Moderately negative"
-    else if (value < -0.5) "Slightly negative"
-    else if (value <= 0.5) "Approximately normal"
-    else if (value <= 1) "Slightly positive"
-    else if (value <= 2) "Moderately positive"
-    else "Severely positive"
+SkewKurt_diamond <- function(x, data = NULL, na.rm = TRUE) {
+  if (inherits(x, "formula")) {
+    mf <- model.frame(x, data)
+    xvar <- mf[[1]]
+    group <- mf[[2]]
+    result <- tapply(xvar, group, function(v) {
+      if (na.rm) v <- v[!is.na(v)]
+      if (length(v) < 8)
+        return(list(skewness = NA, skew_class = NA, kurtosis = NA, kurt_class = NA))
+      skew <- DescTools::Skew(v)
+      kurt <- DescTools::Kurt(v)
+      classify <- function(value) {
+        if (is.na(value)) return(NA)
+        if (value < -2)
+          "Severely negative"
+        else if (value < -1)
+          "Moderately negative"
+        else if (value < -0.5)
+          "Slightly negative"
+        else if (value <= 0.5)
+          "Approximately normal"
+        else if (value <= 1)
+          "Slightly positive"
+        else if (value <= 2)
+          "Moderately positive"
+        else "Severely positive"
+      }
+      list(
+        skewness = round(skew, 2),
+        skew_class = classify(skew),
+        kurtosis = round(kurt, 2),
+        kurt_class = classify(kurt)
+      )
+    })
+    resdf <- do.call(rbind, lapply(result, function(x) as.data.frame(x, stringsAsFactors = FALSE)))
+    resdf$group <- names(result)
+    rownames(resdf) <- NULL
+    return(resdf[, c("group", "skewness", "skew_class", "kurtosis", "kurt_class")])
+  } else {
+    if (!is.numeric(x))
+      stop("Input must be a numeric vector.")
+    if (na.rm)
+      x <- x[!is.na(x)]
+    if (length(x) < 8)
+      stop("Sample size too small to evaluate distribution shape.")
+    skew <- DescTools::Skew(x)
+    kurt <- DescTools::Kurt(x)
+    classify <- function(value) {
+      if (value < -2)
+        "Severely negative"
+      else if (value < -1)
+        "Moderately negative"
+      else if (value < -0.5)
+        "Slightly negative"
+      else if (value <= 0.5)
+        "Approximately normal"
+      else if (value <= 1)
+        "Slightly positive"
+      else if (value <= 2)
+        "Moderately positive"
+      else "Severely positive"
+    }
+    return(list(
+      skewness = round(skew, 2),
+      skew_class = classify(skew),
+      kurtosis = round(kurt, 2),
+      kurt_class = classify(kurt)
+    ))
   }
-
-  list(
-    skewness = round(skew, 2),
-    skew_class = classify(skew),
-    kurtosis = round(kurt, 2),
-    kurt_class = classify(kurt)
-  )
 }
+
 
 #' Correlation Analysis with Confidence Intervals and Interpretation
 #'
@@ -984,4 +1040,5 @@ lm_summary <- function(input, data = NULL, best_res = NULL, worst_res = NULL,
 
   return(df)
 }
+
 

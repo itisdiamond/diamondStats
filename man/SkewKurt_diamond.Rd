@@ -2,24 +2,39 @@
 % Please edit documentation in R/function_diamond.R
 \name{SkewKurt_diamond}
 \alias{SkewKurt_diamond}
-\title{Skewness and Kurtosis with Classification}
+\title{Skewness and Kurtosis (with Classification)}
 \usage{
-SkewKurt_diamond(x, na.rm = TRUE)
+SkewKurt_diamond(x, data = NULL, na.rm = TRUE)
 }
 \arguments{
-\item{x}{Numeric vector.}
+\item{x}{A numeric vector, or a formula of the form \code{numeric_var ~ group_var}.}
 
-\item{na.rm}{Logical. If \code{TRUE}, missing values are removed before computation.}
+\item{data}{Optional data frame in which to evaluate the variables in \code{x}.}
+
+\item{na.rm}{Logical; if \code{TRUE} (default), missing values are removed before computation.}
 }
 \value{
-A list with:
-\describe{
-\item{skewness}{Skewness value}
-\item{skew_class}{Interpretation of skewness}
-\item{kurtosis}{Kurtosis value}
-\item{kurt_class}{Interpretation of kurtosis}
-}
+If a numeric vector is provided, returns a named list with skewness, skewness classification, kurtosis, and kurtosis classification.
+If a formula is provided, returns a data.frame with results per group.
 }
 \description{
-Computes skewness and kurtosis (bias-corrected) using the \pkg{DescTools} package and classifies the results.
+Computes skewness and kurtosis (with interpretation) for a numeric vector or, using a formula, for each group of a factor.
+}
+\details{
+Skewness and kurtosis are computed using \code{DescTools::Skew} and \code{DescTools::Kurt}.
+Interpretation follows these thresholds:
+\itemize{
+\item Severely negative: < -2
+\item Moderately negative: < -1
+\item Slightly negative: < -0.5
+\item Approximately normal: -0.5 to 0.5
+\item Slightly positive: <= 1
+\item Moderately positive: <= 2
+\item Severely positive: > 2
+}
+}
+\examples{
+SkewKurt_diamond(mtcars$mpg)
+SkewKurt_diamond(mpg ~ cyl, data = mtcars)
+
 }
